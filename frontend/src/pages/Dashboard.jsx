@@ -1,45 +1,28 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
+import SessionCard from "../components/SessionCard";
 
-export default function SessionCard({ session }) {
-  const [jsonData, setJsonData] = useState(null);
+export default function Dashboard() {
+  const [sessions, setSessions] = useState([]);
 
-  // ✅ Fetch JSON file content when session loads
   useEffect(() => {
-    if (session.json_file_url) {
-      fetch(session.json_file_url)
-        .then((res) => res.json())
-        .then((data) => setJsonData(data))
-        .catch((err) => console.error("❌ Error loading JSON:", err));
-    }
-  }, [session.json_file_url]);
+    axios.get("https://arvyax-wellness-platform.onrender.com/api/sessions")
+      .then((res) => setSessions(res.data))
+      .catch((err) => console.error(err));
+  }, []);
 
   return (
-    <div className="border rounded-lg p-4 bg-white shadow-md hover:shadow-lg transition">
-      {/* ✅ Session Title */}
-      <h3 className="text-xl font-bold text-blue-600">{session.title}</h3>
-
-      {/* ✅ Tags */}
-      {session.tags && session.tags.length > 0 && (
-        <div className="mt-1">
-          {session.tags.map((tag, index) => (
-            <span
-              key={index}
-              className="inline-block bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded-full mr-2"
-            >
-              #{tag}
-            </span>
-          ))}
-        </div>
-      )}
-
-      {/* ✅ Show JSON Data */}
-      {jsonData ? (
-        <pre className="bg-gray-100 p-3 mt-3 rounded-lg text-sm overflow-x-auto">
-          {JSON.stringify(jsonData, null, 2)}
-        </pre>
-      ) : (
-        <p className="text-gray-400 mt-2 text-sm">Loading session details...</p>
-      )}
+    <div>
+      <h2 className="text-3xl font-bold mb-4 text-center">🌿 Published Wellness Sessions</h2>
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {sessions.length > 0 ? (
+          sessions.map((session) => (
+            <SessionCard key={session._id} session={session} />
+          ))
+        ) : (
+          <p className="text-center text-gray-500 col-span-full">No sessions published yet.</p>
+        )}
+      </div>
     </div>
   );
 }
