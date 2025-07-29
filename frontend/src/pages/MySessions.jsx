@@ -12,7 +12,7 @@ export default function MySessions() {
   // ✅ Fetch sessions & split them into drafts & published
   const fetchSessions = () => {
     axios
-      .get("http://localhost:5000/api/my-sessions", {
+      .get("https://arvyax-wellness-platform.onrender.com/api/my-sessions", {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
@@ -35,7 +35,7 @@ export default function MySessions() {
   const deleteSession = async (sessionId) => {
     if (!window.confirm("Are you sure you want to delete this session?")) return;
     try {
-      await axios.delete(`http://localhost:5000/api/my-sessions/${sessionId}`, {
+      await axios.delete(`https://arvyax-wellness-platform.onrender.com/api/my-sessions/${sessionId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       toast.success("✅ Session deleted");

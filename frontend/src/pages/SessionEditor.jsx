@@ -17,7 +17,7 @@ export default function SessionEditor() {
   useEffect(() => {
     if (sessionId) {
       axios
-        .get(`http://localhost:5000/api/my-sessions/${sessionId}`, {
+        .get(`https://arvyax-wellness-platform.onrender.com/api/my-sessions/${sessionId}`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -45,7 +45,7 @@ export default function SessionEditor() {
 
   const saveDraft = async () => {
     try {
-      await axios.post("http://localhost:5000/api/my-sessions/save-draft", formData, {
+      await axios.post("https://arvyax-wellness-platform.onrender.com/api/my-sessions/save-draft", formData, {
         headers: { Authorization: `Bearer ${token}` },
       });
       toast.success("✅ Draft auto-saved");
@@ -56,7 +56,7 @@ export default function SessionEditor() {
 
   const handlePublish = async () => {
     try {
-      await axios.post("http://localhost:5000/api/my-sessions/publish", formData, {
+      await axios.post("https://arvyax-wellness-platform.onrender.com/api/my-sessions/publish", formData, {
         headers: { Authorization: `Bearer ${token}` },
       });
       toast.success("✅ Session published!");

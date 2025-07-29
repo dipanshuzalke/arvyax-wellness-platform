@@ -11,7 +11,7 @@ export default function Register() {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/api/auth/register", { email, password });
+      await axios.post("https://arvyax-wellness-platform.onrender.com/api/auth/register", { email, password });
       toast.success("Registration successful! Please login.");
       navigate("/login");
     } catch (error) {

@@ -6,7 +6,7 @@ export default function Dashboard() {
   const [sessions, setSessions] = useState([]);
 
   useEffect(() => {
-    axios.get("http://localhost:5000/api/sessions")
+    axios.get("https://arvyax-wellness-platform.onrender.com/api/sessions")
       .then((res) => setSessions(res.data))
       .catch((err) => console.error(err));
   }, []);
