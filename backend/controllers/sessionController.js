@@ -36,20 +36,24 @@ export const getSessionById = async (req, res) => {
 // ✅ Save or Update Draft (Auto-save)
 export const saveDraft = async (req, res) => {
   try {
-    const { title, tags, json_file_url } = req.body;
+    const { id, title, tags, json_file_url } = req.body;
 
-    // check if there's an existing draft (optional: based on _id for editing)
-    let session = await Session.findOne({ user_id: req.user.id, status: "draft" });
+    let session;
 
-    if (session) {
-      // update existing draft
+    if (id) {
+      // ✅ If ID is provided, update that draft
+      session = await Session.findOne({ _id: id, user_id: req.user.id });
+      if (!session) {
+        return res.status(404).json({ message: "Draft not found" });
+      }
+
       session.title = title;
       session.tags = tags ? tags.split(",").map(t => t.trim()) : [];
       session.json_file_url = json_file_url;
       session.updated_at = new Date();
       await session.save();
     } else {
-      // create a new draft
+      // ✅ Otherwise create a NEW draft
       session = await Session.create({
         user_id: req.user.id,
         title,
@@ -80,6 +84,22 @@ export const publishSession = async (req, res) => {
     });
 
     res.status(201).json({ message: "✅ Session published", session });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+// ✅ Delete a draft or published session
+export const deleteSession = async (req, res) => {
+  try {
+    const session = await Session.findOne({ _id: req.params.id, user_id: req.user.id });
+
+    if (!session) {
+      return res.status(404).json({ message: "Session not found" });
+    }
+
+    await session.deleteOne();
+    res.json({ message: "✅ Session deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
